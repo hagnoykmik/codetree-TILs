@@ -78,10 +78,10 @@ sx, sy = 0, 0
 
 
 # 주사위 m 번 굴리기
-for _ in range(m):
+for j in range(m):
     # 주사위 굴리기
     move_dice(d)
-    
+
     # 칸 이동
     nx = sx + dx[d]
     ny = sy + dy[d]
@@ -89,6 +89,9 @@ for _ in range(m):
     # 범위 벗어나면 반대 방향
     if nx < 0 or nx >= n or ny < 0 or ny >= n:
         d = (d + 2) % 4
+        move_dice(d)
+        cur_point = cal_point(nx, ny)
+        point += cur_point
         continue
 
     # 점수 계산 하기
@@ -104,5 +107,6 @@ for _ in range(m):
 
     # 주사위 위치 바꿔주기
     sx, sy = nx, ny
+
 
 print(point)
