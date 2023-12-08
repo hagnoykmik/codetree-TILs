@@ -109,7 +109,7 @@ def push():
 # 포탑 부시기
 def crush():
     # 포탄던지기면 다 해야함
-    if push:
+    if is_push:
         for p in attacked_list:
             ax, ay = p[0], p[1]
             board[ax][ay] -= (score // 2)
