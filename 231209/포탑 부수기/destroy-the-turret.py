@@ -106,8 +106,8 @@ def push():
             nx = (nx + N) % N
             ny = (ny + M) % M
 
-        # 부서진 포탑이 아니라면 지나갈 수 있다
-        if board[nx][ny] != 0:
+        # 부서진 포탑이 아니라면 지나갈 수 있다 + 자기자신도 부시면 안된다!(주의)
+        if board[nx][ny] != 0 and (nx, ny) != (sx, sy):
             route.append((nx, ny))
 
     return route
@@ -154,6 +154,7 @@ for k in range(K):
 
     # 맨 앞에 있는게 공격할 대상
     select()
+
     if end:
         break
 
@@ -173,9 +174,9 @@ for k in range(K):
     # 포탑 정비
     repair()
 
-
 for line in board:
     point = max(line)
     if point > result:
         result = point
+
 print(result)
