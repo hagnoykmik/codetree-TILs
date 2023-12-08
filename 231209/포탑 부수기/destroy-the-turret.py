@@ -178,3 +178,4 @@ for line in board:
     point = max(line)
     if point > result:
         result = point
+print(result)
