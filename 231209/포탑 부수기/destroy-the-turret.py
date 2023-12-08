@@ -28,30 +28,19 @@ def select():
     for i in range(1, len(turret)):
         ax, ay = turret[i][1], turret[i][2]
         if turret[i][0] == attack_turret[0]:
-            if (sx, sy) in attack_list and (ax, ay) in attack_list:
-                if attack_list[(sx, sy)] < attack_list[(ax, ay)]:
-                    sx, sy = ax, ay
-            elif (ax, ay) in attack_list:
+            if attack_list[(sx, sy)] < attack_list[(ax, ay)]:
                 sx, sy = ax, ay
-            else:
-                continue
         else:
             break
 
     # 우선순위 두번째 최근에 공격한 포탑!
-        for j in range(len(turret) - 1, -1, -1):
-            cx, cy = turret[j][1], turret[j][2]
-            if turret[j][0] == goal_turret[0]:
-                if (goal_x, goal_y) in attack_list and (cx, cy) in attack_list:
-                    if attack_list[(goal_x, goal_y)] > attack_list[(cx, cy)]:
-                        goal_x, goal_y = cx, cy
-                elif (cx, cy) in attack_list:
-                    goal_x, goal_y = cx, cy
-                else:
-                    continue
-            else:
-                break
-
+    for j in range(len(turret) - 1, -1, -1):
+        cx, cy = turret[j][1], turret[j][2]
+        if turret[j][0] == goal_turret[0]:
+            if 0 < attack_list[(cx, cy)] < attack_list[(goal_x, goal_y)]:
+                goal_x, goal_y = cx, cy
+        else:
+            break
 
 
 # 레이저공격
@@ -80,6 +69,8 @@ def attack(sx, sy):
             if board[nx][ny] != 0 and not visited[nx][ny]:
                 # 공격 위치에 도달하면 멈춤
                 if(nx, ny) == (goal_x, goal_y):
+                    route.append((nx, ny))
+
                     return route
                 new_route = route[:]
                 new_route.append((nx, ny))
@@ -116,7 +107,7 @@ def push():
 # 포탑 부시기
 def crush():
     # 경로에 있는 포탑은 공격력의 반만 부서짐
-    for p in attacked_list:
+    for p in attacked_list[:-1]:
         ax, ay = p[0], p[1]
         board[ax][ay] -= (score // 2)
         if board[ax][ay] < 0:
@@ -143,7 +134,7 @@ N, M, K = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(N)]
 
 turret = []
-attack_list = dict() # 공격한 포탑 저장
+attack_list = {(n, m) : 0 for n in range(N) for m in range(M)} # 공격한 포탑 저장
 result = 0
 
 end = False # 만약 부서지지 않은 포탑이 1개가 된다면 그 즉시 중지됩니다.
@@ -164,6 +155,7 @@ for k in range(K):
 
     # 공격
     attacked_list = attack(sx, sy)
+
     if not attacked_list:
         # 포탄 던지기
         attacked_list = push()
@@ -173,6 +165,7 @@ for k in range(K):
 
     # 포탑 정비
     repair()
+
 
 for line in board:
     point = max(line)
