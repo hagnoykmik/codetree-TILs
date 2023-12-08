@@ -37,7 +37,7 @@ def select():
     for j in range(len(turret) - 1, -1, -1):
         cx, cy = turret[j][1], turret[j][2]
         if turret[j][0] == goal_turret[0]:
-            if 0 < attack_list[(cx, cy)] < attack_list[(goal_x, goal_y)]:
+            if attack_list[(cx, cy)] < attack_list[(goal_x, goal_y)]:
                 goal_x, goal_y = cx, cy
         else:
             break
@@ -82,6 +82,8 @@ def attack(sx, sy):
 
 # 포탄던지기
 def push():
+    global is_push
+    is_push = True # 포탄던지기로 한 것을 명시
     route = []
 
     # 8방향
@@ -106,12 +108,21 @@ def push():
 
 # 포탑 부시기
 def crush():
-    # 경로에 있는 포탑은 공격력의 반만 부서짐
-    for p in attacked_list[:-1]:
-        ax, ay = p[0], p[1]
-        board[ax][ay] -= (score // 2)
-        if board[ax][ay] < 0:
-            board[ax][ay] = 0
+    # 포탄던지기면 다 해야함
+    if push:
+        for p in attacked_list:
+            ax, ay = p[0], p[1]
+            board[ax][ay] -= (score // 2)
+            if board[ax][ay] < 0:
+                board[ax][ay] = 0
+    # 레이저면 경로 마지막거는 빼주기
+    else:
+        # 경로에 있는 포탑은 공격력의 반만 부서짐
+        for p in attacked_list[:-1]:
+            ax, ay = p[0], p[1]
+            board[ax][ay] -= (score // 2)
+            if board[ax][ay] < 0:
+                board[ax][ay] = 0
 
     # 목표물은 공격력만큼 부서짐
     board[goal_x][goal_y] -= score
@@ -139,6 +150,7 @@ result = 0
 
 end = False # 만약 부서지지 않은 포탑이 1개가 된다면 그 즉시 중지됩니다.
 for k in range(K):
+    is_push = False
 
     sx, sy = -1, -1
     goal_x, goal_y = -1, -1
@@ -149,7 +161,7 @@ for k in range(K):
     if end:
         break
 
-    attack_list[(sx, sy)] = k  # k번째에 공격함(숫자가 클수록 최신)
+    attack_list[(sx, sy)] = k + 1  # k번째에 공격함(숫자가 클수록 최신)
     board[sx][sy] += N + M  # 공격력 초기화
     score = board[sx][sy]
 
