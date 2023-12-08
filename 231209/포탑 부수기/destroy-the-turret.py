@@ -155,7 +155,6 @@ for k in range(K):
     # 맨 앞에 있는게 공격할 대상
     select()
     if end:
-        print(board)
         break
 
     attack_list[(sx, sy)] = k  # k번째에 공격함(숫자가 클수록 최신)
@@ -173,12 +172,9 @@ for k in range(K):
 
     # 포탑 정비
     repair()
-    print(board)
+
 
 for line in board:
     point = max(line)
     if point > result:
         result = point
-
-print(result)
-print(attack_list)
