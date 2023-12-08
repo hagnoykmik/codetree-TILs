@@ -29,7 +29,6 @@ def select():
                     sx, sy = ax, ay
             elif (ax, ay) in attack_list:
                 sx, sy = ax, ay
-                print("공격한적 있다.")
             else:
                 continue
         else:
@@ -44,7 +43,6 @@ def select():
                         goal_x, goal_y = cx, cy
                 elif (cx, cy) in attack_list:
                     goal_x, goal_y = cx, cy
-                    print("공격한적 있다.")
                 else:
                     continue
             else:
